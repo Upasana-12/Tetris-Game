@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 class Board
 {
     public static char board[][]=new char[20][20];
@@ -162,6 +163,35 @@ abstract class Shape
             for(int i=0;i<4;i++)
             {
                 coords[i][0]+=1;
+            }
+         
+       }
+    }
+
+    int check_up()
+    {
+     
+     for(int i=0;i<4;i++)
+     {
+         if(Board.board[coords[i][0]-1][coords[i][1]] == '#' || Board.board[coords[i][0]-1][coords[i][1]] == '*')
+         {
+             return 0;
+             
+         }
+     }
+     
+     return 1;
+    }
+
+    void moveUp()
+   {
+      
+      int c=check_up();
+       if(c==1)
+       {
+            for(int i=0;i<4;i++)
+            {
+                coords[i][0]-=1;
             }
          
        }
@@ -727,6 +757,7 @@ public class TetrisMain
 {
     int fig;
    static int hash[]=new int[20];
+   static Stack<Character> stack = new Stack<Character>();
     public final static void clearScreen() 
     {  
         try
@@ -802,9 +833,9 @@ public class TetrisMain
         b.displayBoard();
         ob.rem_prev_shape();
         Scanner sc = new Scanner(System.in);
-        char ch;
+        char ch,topch;
          ch = sc.next().charAt(0); 
-
+        
          clearScreen();
         
 
@@ -812,6 +843,7 @@ public class TetrisMain
         {
             if(ch=='a')
             {
+                stack.push(ch); // pushing character in stack
                 ob.moveLeft();
                 ob.changeBoard();
                 b.displayBoard();
@@ -819,6 +851,7 @@ public class TetrisMain
             }
             if(ch=='d')
             {
+                stack.push(ch); // pushing character in stack
                 ob.moveRight();
                 ob.changeBoard();
                 b.displayBoard();
@@ -826,6 +859,7 @@ public class TetrisMain
             }
             if(ch=='s')
             {
+                stack.push(ch); // pushing character in stack
                 ob.moveDown();
                 ob.changeBoard();
                 b.displayBoard();
@@ -833,6 +867,7 @@ public class TetrisMain
             }
             if(ch=='w')
             {
+                stack.push(ch); // pushing character in stack
                 ob.rotateRight();
                 ob.changeBoard();
                 b.displayBoard();
@@ -840,12 +875,64 @@ public class TetrisMain
             }
             if(ch=='z')
             {
+                stack.push(ch); // pushing character in stack
                 ob.rotateLeft();
                 ob.changeBoard();
                 b.displayBoard();
                 ob.rem_prev_shape();
             }
-            
+            if(ch=='u')
+            {
+                if(stack.empty())
+                {
+
+                }
+                else
+                {
+                topch = stack.pop();
+               
+                if(topch=='a')
+                {
+                    ob.moveRight();
+                    ob.changeBoard();
+                    b.displayBoard();
+                    ob.rem_prev_shape();
+                }
+                if(topch=='d')
+                {
+                    //stack.push(ch); // pushing character in stack
+                    ob.moveLeft();
+                    ob.changeBoard();
+                    b.displayBoard();
+                    ob.rem_prev_shape();
+                }
+                if(topch=='s')
+                {
+                    //stack.push(ch); // pushing character in stack
+                    ob.moveUp();
+                    ob.changeBoard();
+                    b.displayBoard();
+                    ob.rem_prev_shape();
+                }
+                if(topch=='w')
+                {
+                    //stack.push(ch); // pushing character in stack
+                    ob.rotateLeft();
+                    ob.changeBoard();
+                    b.displayBoard();
+                    ob.rem_prev_shape();
+                }
+                if(topch=='z')
+                {
+                    //stack.push(ch); // pushing character in stack
+                    ob.rotateRight();
+                    ob.changeBoard();
+                    b.displayBoard();
+                    ob.rem_prev_shape();
+                }
+            }
+
+            }
             if(ob.check_bottom()==0)
             {
                 check_hash(ob,b);
@@ -877,6 +964,7 @@ public class TetrisMain
             }
             
             ch = sc.next().charAt(0);
+            
             clearScreen();   
             
         }
